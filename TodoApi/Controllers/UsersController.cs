@@ -9,49 +9,49 @@ using TodoApi.Models;
 
 namespace TodoApi.Controllers
 {
-    [Route("api/todo/[controller]")]
+    [Route("api/[controller]")]
     [ApiController]
-    public class TodoItemsController : ControllerBase
+    public class UsersController : ControllerBase
     {
         private readonly TodoContext _context;
 
-        public TodoItemsController(TodoContext context)
+        public UsersController(TodoContext context)
         {
             _context = context;
         }
 
-        // GET: api/TodoItems
+        // GET: api/Users
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<TodoItem>>> GetTodoItems()
+        public async Task<ActionResult<IEnumerable<User>>> GetUsers()
         {
-            return await _context.TodoItems.ToListAsync();
+            return await _context.Users.ToListAsync();
         }
 
-        // GET: api/TodoItems/5
+        // GET: api/Users/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<TodoItem>> GetTodoItem(long id)
+        public async Task<ActionResult<User>> GetUser(int id)
         {
-            var todoItem = await _context.TodoItems.FindAsync(id);
+            var user = await _context.Users.FindAsync(id);
 
-            if (todoItem == null)
+            if (user == null)
             {
                 return NotFound();
             }
 
-            return todoItem;
+            return user;
         }
 
-        // PUT: api/TodoItems/5
+        // PUT: api/Users/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutTodoItem(long id, TodoItem todoItem)
+        public async Task<IActionResult> PutUser(int id, User user)
         {
-            if (id != todoItem.Id)
+            if (id != user.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(todoItem).State = EntityState.Modified;
+            _context.Entry(user).State = EntityState.Modified;
 
             try
             {
@@ -59,7 +59,7 @@ namespace TodoApi.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!TodoItemExists(id))
+                if (!UserExists(id))
                 {
                     return NotFound();
                 }
@@ -72,37 +72,36 @@ namespace TodoApi.Controllers
             return NoContent();
         }
 
-        // POST: api/TodoItems
+        // POST: api/Users
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<TodoItem>> PostTodoItem(TodoItem todoItem)
+        public async Task<ActionResult<User>> PostUser(User user)
         {
-            _context.TodoItems.Add(todoItem);
+            _context.Users.Add(user);
             await _context.SaveChangesAsync();
 
-            //return CreatedAtAction("GetTodoItem", new { id = todoItem.Id }, todoItem);
-            return CreatedAtAction(nameof(GetTodoItem), new { id = todoItem.Id }, todoItem);
+            return CreatedAtAction("GetUser", new { id = user.Id }, user);
         }
 
-        // DELETE: api/TodoItems/5
+        // DELETE: api/Users/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteTodoItem(long id)
+        public async Task<IActionResult> DeleteUser(int id)
         {
-            var todoItem = await _context.TodoItems.FindAsync(id);
-            if (todoItem == null)
+            var user = await _context.Users.FindAsync(id);
+            if (user == null)
             {
                 return NotFound();
             }
 
-            _context.TodoItems.Remove(todoItem);
+            _context.Users.Remove(user);
             await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
-        private bool TodoItemExists(long id)
+        private bool UserExists(int id)
         {
-            return _context.TodoItems.Any(e => e.Id == id);
+            return _context.Users.Any(e => e.Id == id);
         }
     }
 }
